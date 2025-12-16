@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lexis — ドキュメントに、Pull Requestという作法を。</title>
+    <meta
+      name="description"
+      content="Gitの思想をベースに、編集 → レビュー → マージをチーム全体で回せるドキュメント管理。β版ユーザー募集中。"
+    />
+
+    <style>
+      :root {
+        --bg: #0b0d10;
+        --panel: #0f1217;
+        --text: #e9eef5;
+        --muted: rgba(233, 238, 245, 0.72);
+        --faint: rgba(233, 238, 245, 0.12);
+        --line: rgba(233, 238, 245, 0.14);
+        --accent: #4ade80; /* green-ish (diff vibe) */
+        --accent2: #60a5fa; /* optional */
+        --shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+        --radius: 18px;
+        --radius2: 22px;
+        --max: 1120px;
+        --pad: 24px;
+        --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Hiragino Sans",
+          "Hiragino Kaku Gothic ProN", "Noto Sans JP", "Yu Gothic", "Meiryo", sans-serif;
+        --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          "Courier New", monospace;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        height: 100%;
+      }
+      body {
+        margin: 0;
+        font-family: var(--font-sans);
+        background: radial-gradient(1200px 600px at 20% 0%, rgba(74, 222, 128, 0.08), transparent 55%),
+          radial-gradient(900px 500px at 70% 10%, rgba(96, 165, 250, 0.07), transparent 55%),
+          linear-gradient(180deg, #090b0e 0%, #0b0d10 40%, #07080a 100%);
+        color: var(--text);
+        line-height: 1.6;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+      .container {
+        width: min(var(--max), calc(100% - 2 * var(--pad)));
+        margin-inline: auto;
+      }
+
+      /* Top nav */
+      .nav {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        backdrop-filter: blur(10px);
+        background: rgba(11, 13, 16, 0.72);
+        border-bottom: 1px solid var(--line);
+      }
+      .nav-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 14px 0;
+        gap: 12px;
+      }
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 650;
+        letter-spacing: 0.2px;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: var(--accent);
+        box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.12);
+      }
+      .nav-links {
+        display: flex;
+        gap: 18px;
+        align-items: center;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      .nav-links a:hover {
+        color: var(--text);
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px 14px;
+        border-radius: 14px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.04);
+        color: var(--text);
+        font-weight: 650;
+        letter-spacing: 0.2px;
+        transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+        cursor: pointer;
+        user-select: none;
+      }
+      .btn:hover {
+        transform: translateY(-1px);
+        background: rgba(255, 255, 255, 0.06);
+        border-color: rgba(233, 238, 245, 0.22);
+      }
+      .btn-primary {
+        background: linear-gradient(180deg, rgba(74, 222, 128, 0.22), rgba(74, 222, 128, 0.12));
+        border-color: rgba(74, 222, 128, 0.32);
+      }
+      .btn-primary:hover {
+        background: linear-gradient(180deg, rgba(74, 222, 128, 0.28), rgba(74, 222, 128, 0.16));
+        border-color: rgba(74, 222, 128, 0.44);
+      }
+
+      /* Hero */
+      .hero {
+        padding: 54px 0 40px;
+      }
+      .hero-grid {
+        display: grid;
+        grid-template-columns: 1.05fr 0.95fr;
+        gap: 28px;
+        align-items: center;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 13px;
+        letter-spacing: 0.3px;
+      }
+      .kicker .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+      }
+      .h1 {
+        margin: 14px 0 0;
+        font-size: clamp(34px, 4vw, 56px);
+        line-height: 1.06;
+        letter-spacing: -0.5px;
+        font-weight: 760;
+      }
+      .h1 .mono {
+        font-family: var(--font-mono);
+        letter-spacing: -0.2px;
+      }
+      .hero-sub {
+        margin-top: 18px;
+        font-size: 16px;
+        color: var(--muted);
+      }
+      .hero-sub strong {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .hero-cta {
+        margin-top: 22px;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .micro {
+        margin-top: 10px;
+        color: rgba(233, 238, 245, 0.58);
+        font-size: 12px;
+      }
+
+      /* Right hero visual */
+      .visual {
+        position: relative;
+        border-radius: var(--radius2);
+        border: 1px solid var(--line);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        box-shadow: var(--shadow);
+        overflow: hidden;
+      }
+      .visual-top {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--line);
+        color: rgba(233, 238, 245, 0.7);
+        font-size: 12px;
+      }
+      .traffic {
+        display: inline-flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .t {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: rgba(233, 238, 245, 0.16);
+      }
+      .visual-body {
+        padding: 14px;
+      }
+      .mock {
+        border-radius: 16px;
+        border: 1px solid rgba(233, 238, 245, 0.12);
+        background: rgba(0, 0, 0, 0.28);
+        overflow: hidden;
+      }
+      .mock img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+      .visual-note {
+        position: absolute;
+        right: 14px;
+        bottom: 14px;
+        padding: 9px 10px;
+        border-radius: 14px;
+        border: 1px solid rgba(74, 222, 128, 0.28);
+        background: rgba(74, 222, 128, 0.08);
+        color: rgba(233, 238, 245, 0.9);
+        font-size: 12px;
+        backdrop-filter: blur(8px);
+      }
+
+      /* Sections */
+      section {
+        padding: 48px 0;
+        border-top: 1px solid rgba(233, 238, 245, 0.08);
+      }
+      .section-head {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .h2 {
+        font-size: clamp(22px, 2.4vw, 34px);
+        line-height: 1.18;
+        letter-spacing: -0.2px;
+        font-weight: 740;
+        margin: 0;
+      }
+      .lead {
+        color: var(--muted);
+        margin: 0;
+        max-width: 70ch;
+      }
+
+      /* One-scroll (UI + copy) */
+      .one-scroll {
+        display: grid;
+        grid-template-columns: 0.95fr 1.05fr;
+        gap: 24px;
+        align-items: start;
+      }
+      .card {
+        border-radius: var(--radius2);
+        border: 1px solid var(--line);
+        background: rgba(255, 255, 255, 0.03);
+        box-shadow: var(--shadow);
+      }
+      .card-pad {
+        padding: 18px;
+      }
+      .h3 {
+        margin: 0;
+        font-size: 18px;
+        letter-spacing: -0.1px;
+        font-weight: 720;
+      }
+      .p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+      .flow {
+        margin-top: 14px;
+        display: inline-flex;
+        gap: 10px;
+        align-items: center;
+        padding: 10px 12px;
+        border: 1px solid rgba(233, 238, 245, 0.14);
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.18);
+        color: rgba(233, 238, 245, 0.82);
+        font-size: 13px;
+        font-family: var(--font-mono);
+        letter-spacing: 0.2px;
+      }
+      .flow .arrow {
+        color: rgba(74, 222, 128, 0.9);
+      }
+      .hint {
+        margin-top: 10px;
+        font-size: 12px;
+        color: rgba(233, 238, 245, 0.58);
+      }
+
+      /* Problem bullets */
+      .bullets {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .bullet {
+        border-radius: 16px;
+        border: 1px solid rgba(233, 238, 245, 0.12);
+        background: rgba(255, 255, 255, 0.02);
+        padding: 14px 14px;
+        color: rgba(233, 238, 245, 0.86);
+        font-size: 14px;
+      }
+      .bullet span {
+        color: rgba(233, 238, 245, 0.66);
+      }
+
+      /* Split sections */
+      .split {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        align-items: start;
+      }
+      .list {
+        margin: 12px 0 0;
+        padding: 0;
+        list-style: none;
+        display: grid;
+        gap: 10px;
+      }
+      .list li {
+        display: grid;
+        grid-template-columns: 18px 1fr;
+        gap: 10px;
+        align-items: start;
+        color: rgba(233, 238, 245, 0.84);
+      }
+      .check {
+        width: 18px;
+        height: 18px;
+        border-radius: 6px;
+        border: 1px solid rgba(74, 222, 128, 0.35);
+        background: rgba(74, 222, 128, 0.10);
+        display: grid;
+        place-items: center;
+        color: rgba(74, 222, 128, 0.95);
+        font-size: 12px;
+        line-height: 1;
+        margin-top: 2px;
+      }
+
+      /* FAQ */
+      .faq {
+        display: grid;
+        gap: 10px;
+        margin-top: 18px;
+      }
+      details {
+        border: 1px solid rgba(233, 238, 245, 0.14);
+        border-radius: 16px;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 12px 14px;
+      }
+      summary {
+        cursor: pointer;
+        list-style: none;
+        font-weight: 680;
+        color: rgba(233, 238, 245, 0.92);
+      }
+      summary::-webkit-details-marker {
+        display: none;
+      }
+      details p {
+        margin: 10px 0 0;
+        color: var(--muted);
+      }
+
+      /* Final CTA */
+      .cta {
+        padding: 56px 0 70px;
+      }
+      .cta-box {
+        border-radius: 26px;
+        border: 1px solid rgba(233, 238, 245, 0.14);
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02));
+        box-shadow: var(--shadow);
+        padding: 22px;
+        display: grid;
+        gap: 14px;
+        align-items: start;
+      }
+      .cta-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .cta-note {
+        font-size: 12px;
+        color: rgba(233, 238, 245, 0.58);
+      }
+
+      /* Form */
+      .form {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 10px;
+      }
+      .form .full {
+        grid-column: 1 / -1;
+      }
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 12px;
+        color: rgba(233, 238, 245, 0.64);
+      }
+      input,
+      textarea {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid rgba(233, 238, 245, 0.16);
+        background: rgba(0, 0, 0, 0.20);
+        color: rgba(233, 238, 245, 0.92);
+        padding: 12px 12px;
+        outline: none;
+        font-family: var(--font-sans);
+        font-size: 14px;
+      }
+      input:focus,
+      textarea:focus {
+        border-color: rgba(74, 222, 128, 0.45);
+        box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.10);
+      }
+      textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      footer {
+        padding: 26px 0 36px;
+        color: rgba(233, 238, 245, 0.48);
+        font-size: 12px;
+        border-top: 1px solid rgba(233, 238, 245, 0.08);
+      }
+
+      /* Responsive */
+      @media (max-width: 980px) {
+        .hero-grid {
+          grid-template-columns: 1fr;
+        }
+        .one-scroll {
+          grid-template-columns: 1fr;
+        }
+        .split {
+          grid-template-columns: 1fr;
+        }
+        .bullets {
+          grid-template-columns: 1fr;
+        }
+        .form {
+          grid-template-columns: 1fr;
+        }
+        .nav-links {
+          display: none;
+        }
+
+        /* Mobile headline line breaks (as we agreed) */
+        .h1 {
+          font-size: 36px;
+          line-height: 1.08;
+        }
+      }
+
+      /* Smooth anchor */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      /* Small helper for mono highlight */
+      .mono {
+        font-family: var(--font-mono);
+      }
+      .accent {
+        color: rgba(74, 222, 128, 0.95);
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- NAV -->
+    <div class="nav">
+      <div class="container nav-inner">
+        <div class="brand" aria-label="Lexis">
+          <span class="dot" aria-hidden="true"></span>
+          <span>Lexis</span>
+        </div>
+
+        <div class="nav-links">
+          <a href="#why">課題</a>
+          <a href="#how">仕組み</a>
+          <a href="#onboarding">オンボーディング</a>
+          <a href="#beta">β版</a>
+        </div>
+
+        <a class="btn btn-primary" href="#signup">β版に登録する</a>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <header class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="kicker">
+            <span class="pill"><span class="dot" style="width: 8px; height: 8px"></span> β版ユーザー募集中</span>
+            <span>ドキュメント管理 / レビュー / 履歴</span>
+          </div>
+
+          <h1 class="h1">
+            <!-- Mobile-friendly line breaks -->
+            <span>ドキュメントに、</span><br />
+            <span class="mono">Pull Request</span>という<br />
+            <span>作法を。</span>
+          </h1>
+
+          <p class="hero-sub">
+            Gitの思想をベースに、<br />
+            <strong>編集 → レビュー → マージ</strong>を<br />
+            チーム全体で回せるドキュメント管理
+          </p>
+
+          <p class="micro">Gitを知らないメンバーがいても、自然に使える</p>
+
+          <div class="hero-cta">
+            <a class="btn btn-primary" href="#signup">β版に登録する</a>
+            <a class="btn" href="#how">仕組みを見る</a>
+          </div>
+
+          <div class="micro">無料・クレジットカード不要 / いつでも利用をやめられます</div>
+        </div>
+
+        <div class="visual" aria-label="UI preview">
+          <div class="visual-top">
+            <div class="traffic" aria-hidden="true">
+              <span class="t"></span><span class="t"></span><span class="t"></span>
+            </div>
+            <div class="mono">Lexis / Pull Request</div>
+          </div>
+          <div class="visual-body">
+            <div class="mock">
+              <!-- TODO: replace with your real screenshot path -->
+              <img src="assets/ui-1.jpg" alt="Lexisの変更提案（差分・レビュー）画面のスクリーンショット" />
+            </div>
+          </div>
+          <div class="visual-note">これはドキュメントの変更提案です</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- WHY -->
+    <section id="why">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="h2">
+            ドキュメントだけが、<br />
+            Gitの外にある。
+          </h2>
+          <p class="lead">
+            コードはGitで管理しているのに、仕様・ルール・意思決定は口頭やSlackに流れて消える。
+            この歪みが、説明コストと属人化を生んでいます。
+          </p>
+        </div>
+
+        <div class="bullets">
+          <div class="bullet">新メンバーが入るたび、同じ説明を繰り返している</div>
+          <div class="bullet">仕様変更の経緯がSlackに流れて消える</div>
+          <div class="bullet">「これ誰が決めた？」が後から分からない</div>
+          <div class="bullet">ドキュメントはあるが、どれが正か保証できない</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW / ONE-SCROLL -->
+    <section id="how">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="h2">ドキュメントには、<br />合意のプロセスがない</h2>
+          <p class="lead">
+            変更は提案され、レビューされ、合意され、その履歴が残る。コードでは当たり前の流れを、ドキュメントにも。
+          </p>
+        </div>
+
+        <div class="one-scroll">
+          <div class="card">
+            <div class="card-pad">
+              <h3 class="h3">
+                変更は、<br />
+                すぐには<br />
+                反映されない。
+              </h3>
+              <p class="p">
+                変更内容は記録され、<br />
+                レビューとマージを経て初めて有効になります。
+              </p>
+
+              <div class="flow" aria-label="flow">
+                変更 <span class="arrow">→</span> レビュー <span class="arrow">→</span> マージ
+              </div>
+
+              <div class="hint">ドキュメントの変更を、コードと同じように扱います。</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-pad">
+              <div class="mock">
+                <!-- TODO: replace with your second screenshot or a different crop -->
+                <img src="assets/ui-2.jpg" alt="Lexisの差分・レビューが見えるUIスクリーンショット" />
+              </div>
+              <div class="hint" style="margin-top: 10px">
+                ※画面は開発中のものです。実際の体験を優先して表示しています。
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 18px" class="split">
+          <div class="card">
+            <div class="card-pad">
+              <h3 class="h3">Gitの作法を、ドキュメントへ。</h3>
+              <ul class="list">
+                <li><span class="check">✓</span><span>編集は即反映されない</span></li>
+                <li><span class="check">✓</span><span>変更は提案として残る</span></li>
+                <li><span class="check">✓</span><span>レビュー・承認で合意が形成される</span></li>
+                <li><span class="check">✓</span><span>差分と履歴が積み上がる</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-pad">
+              <h3 class="h3">ブランチを知らなくても、回ります。</h3>
+              <p class="p">
+                Lexisは、Gitの内部構造をユーザーに理解させるツールではありません。<br />
+                必要なのは「編集する / レビューする / 承認する」だけです。
+              </p>
+              <div class="hint">Gitを知っている人が設計し、知らない人も自然に使える。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ONBOARDING -->
+    <section id="onboarding">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="h2">説明しなくていい<br />組織。</h2>
+          <p class="lead">
+            オンボーディングが大変になる理由は、情報が足りないからではありません。<br />
+            「なぜそうなったのか」が残っていないからです。
+          </p>
+        </div>
+
+        <div class="split">
+          <div class="card">
+            <div class="card-pad">
+              <h3 class="h3">Lexisでは、決まった理由まで残ります</h3>
+              <ul class="list">
+                <li><span class="check">✓</span><span>変更の提案が、そのまま履歴になる</span></li>
+                <li><span class="check">✓</span><span>レビューのやりとりが、判断の背景として残る</span></li>
+                <li><span class="check">✓</span><span>なぜこのルールなのかを後から追える</span></li>
+                <li><span class="check">✓</span><span>新しいメンバーが、自分で理解できる</span></li>
+              </ul>
+
+              <div class="hint" style="margin-top: 12px">
+                新しいメンバーに「これ読んでおいて」と言える状態をつくります。
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-pad">
+              <h3 class="h3">Gitを知っている人から、始められます。</h3>
+              <p class="p">
+                Lexisは、チーム全員にGitを理解させるツールではありません。<br />
+                最初は「あとから説明が発生しやすいドキュメント」だけで構いません。
+              </p>
+              <div class="flow" style="margin-top: 12px">
+                1. 使い始める <span class="arrow">→</span> 2. レビュー運用 <span class="arrow">→</span> 3. 広げる
+              </div>
+              <div class="hint">学習コストは、チーム全体に広げません。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BETA / FAQ -->
+    <section id="beta">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="h2">β版について。</h2>
+          <p class="lead">最後に残る不安を、ここで先に潰します。</p>
+        </div>
+
+        <div class="faq">
+          <details open>
+            <summary>料金はかかりますか？</summary>
+            <p>
+              いいえ。<strong>β版の期間中は無料</strong>で使えます。β版ユーザーに事前の断りなく課金することはありません。
+            </p>
+          </details>
+
+          <details>
+            <summary>機能や人数の制限はありますか？</summary>
+            <p>
+              β版のため一部は未実装・調整中です。ただし、<strong>編集 → レビュー → マージ</strong>などコア体験は制限なく利用できます。
+              想定規模は小〜中規模チームです。
+            </p>
+          </details>
+
+          <details>
+            <summary>フィードバックは必須ですか？</summary>
+            <p>
+              必須ではありません。使ってみて感じたこと（良い点も不満も）を教えていただけると助かります。
+            </p>
+          </details>
+
+          <details>
+            <summary>途中で使えなくなったりしませんか？</summary>
+            <p>
+              実運用を前提に開発しています。突然停止したりデータを失うことはありません（β版のため仕様変更が入る可能性はあります）。
+            </p>
+          </details>
+        </div>
+
+        <div class="hint" style="margin-top: 14px">
+          <span class="accent">気軽に試して、合わなければやめられます。</span> 導入を決める必要はありません。
+        </div>
+      </div>
+    </section>
+
+    <!-- FINAL CTA / SIGNUP -->
+    <section id="signup" class="cta">
+      <div class="container">
+        <div class="cta-box">
+          <div class="section-head" style="margin-bottom: 0">
+            <h2 class="h2">まずは、<br />β版から。</h2>
+            <p class="lead">
+              Lexisが自分たちに合うかどうかは、実際に使ってみないと分かりません。
+            </p>
+          </div>
+
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#form">β版に登録する</a>
+            <div class="cta-note">無料・クレジットカード不要 / いつでも利用をやめられます</div>
+          </div>
+
+          <!-- Simple signup form (replace action with your endpoint / form service) -->
+          <form id="form" class="form" action="#" method="post" onsubmit="return false;">
+            <label>
+              お名前
+              <input type="text" name="name" placeholder="例）Eito Morohashi" autocomplete="name" />
+            </label>
+            <label>
+              メールアドレス
+              <input type="email" name="email" placeholder="例）you@company.com" autocomplete="email" required />
+            </label>
+
+            <label class="full">
+              会社名（任意）
+              <input type="text" name="company" placeholder="例）Nexis Inc." autocomplete="organization" />
+            </label>
+
+            <label class="full">
+              一言（任意）
+              <textarea name="note" placeholder="例）開発ルールの運用から試したいです。"></textarea>
+            </label>
+
+            <div class="full" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center">
+              <button class="btn btn-primary" type="submit">送信する（ダミー）</button>
+              <span class="cta-note">※このフォームはダミーです。実運用ではFormspree等に接続してください。</span>
+            </div>
+          </form>
+
+          <div class="cta-note">導入を決める必要はありません。</div>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        © <span id="y"></span> Lexis. All rights reserved.
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById("y").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
