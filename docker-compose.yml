@@ -1,6 +1,7 @@
 version: '3.8'
 
 services:
+  # 本番用NGINXサーバー
   web:
     image: nginx:alpine
     container_name: lexis-lp-web
@@ -8,5 +9,18 @@ services:
       - "8081:80"
     volumes:
       - ./:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+  # 開発用ホットリロードサーバー
+  dev:
+    image: node:20-alpine
+    container_name: lexis-lp-dev
+    working_dir: /app
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    volumes:
+      - ./:/app
+    command: sh -c "npm install && npm run dev"
     restart: unless-stopped
 

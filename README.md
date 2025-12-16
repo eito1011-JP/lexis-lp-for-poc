@@ -8,14 +8,29 @@ Gitの思想をベースに、編集 → レビュー → マージをチーム�
 
 ## ローカル環境での起動方法
 
-### Dockerを使用する場合
+### 開発環境（ホットリロード対応）
+
+HTML/CSS/JSの変更が即座にブラウザに反映されます。
+
+```bash
+# 開発サーバーを起動（ホットリロード有効）
+docker-compose up dev
+
+# ブラウザでアクセス
+open http://localhost:3000
+
+# コンテナを停止
+docker-compose down
+```
+
+### Dockerを使用する場合（本番用）
 
 ```bash
 # コンテナを起動
 docker run -d --name lexis-lp-web -p 8081:80 -v "$(pwd)":/usr/share/nginx/html:ro nginx:alpine
 
 # または docker-compose を使用
-docker-compose up -d
+docker-compose up web -d
 
 # ブラウザでアクセス
 open http://localhost:8081
@@ -27,6 +42,19 @@ docker stop lexis-lp-web
 docker rm lexis-lp-web
 ```
 
+### ローカルで直接起動する場合（Node.js使用）
+
+```bash
+# 依存関係をインストール
+npm install
+
+# 開発サーバーを起動（ホットリロード有効）
+npm run dev
+
+# ブラウザでアクセス
+open http://localhost:3000
+```
+
 ### その他のHTTPサーバーを使用する場合
 
 ```bash
@@ -36,6 +64,8 @@ python3 -m http.server 8081
 # PHPの場合
 php -S localhost:8081
 ```
+
+**注意**: Python/PHPサーバーではホットリロード機能は使用できません。
 
 ## ファイル構成
 

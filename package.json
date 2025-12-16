@@ -1,0 +1,13 @@
+{
+  "name": "lexis-lp",
+  "version": "1.0.0",
+  "description": "Lexis Landing Page with Hot Reload",
+  "scripts": {
+    "dev": "browser-sync start --server --files '**/*.html, **/*.css, **/*.js, assets/**/*' --port 3000 --no-notify --no-open",
+    "start": "npm run dev"
+  },
+  "devDependencies": {
+    "browser-sync": "^3.0.2"
+  }
+}
+
