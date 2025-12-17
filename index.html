@@ -129,7 +129,10 @@
 
       /* Hero */
       .hero {
-        padding: 54px 0 40px;
+        padding: 54px 0;
+        min-height: calc(100vh - 80px);
+        display: flex;
+        align-items: center;
       }
       .hero-grid {
         display: grid;
@@ -250,7 +253,6 @@
       /* Sections */
       section {
         padding: 48px 0;
-        border-top: 1px solid rgba(233, 238, 245, 0.08);
       }
       .section-head {
         display: flex;
@@ -553,8 +555,6 @@
           <a href="#onboarding">オンボーディング</a>
           <a href="#beta">β版</a>
         </div>
-
-        <a class="btn btn-primary" href="#signup">β版に登録する</a>
       </div>
     </div>
 
@@ -764,7 +764,7 @@
             </label>
 
             <div class="full" style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: center; margin-top: 20px">
-              <button class="btn btn-primary" type="submit" id="submitBtn">送信する</button>
+              <button class="btn btn-primary" type="submit" id="submitBtn" style="min-width: 150px">送信する</button>
               <span class="cta-note" id="formMessage"></span>
             </div>
           </form>
