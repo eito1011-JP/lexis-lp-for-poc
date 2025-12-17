@@ -341,7 +341,8 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 18px;
-        align-items: start;
+        align-items: stretch;
+        grid-auto-rows: 1fr;
       }
       .list {
         margin: 12px 0 0;
@@ -553,14 +554,12 @@
             チーム全体で回せるドキュメント管理
           </p>
 
-          <p class="micro">Gitを知らないメンバーがいても、自然に使える</p>
 
           <div class="hero-cta">
             <a class="btn btn-primary" href="#signup">β版に登録する</a>
             <a class="btn" href="#how">仕組みを見る</a>
           </div>
 
-          <div class="micro">無料・クレジットカード不要 / いつでも利用をやめられます</div>
         </div>
 
         <div class="visual" aria-label="UI preview">
@@ -693,7 +692,6 @@
               <ul class="list">
                 <li><span class="check">✓</span><span>変更の提案が、そのまま履歴になる</span></li>
                 <li><span class="check">✓</span><span>レビューのやりとりが、判断の背景として残る</span></li>
-                <li><span class="check">✓</span><span>なぜこのルールなのかを後から追える</span></li>
                 <li><span class="check">✓</span><span>新しいメンバーが、自分で理解できる</span></li>
               </ul>
 
@@ -735,22 +733,23 @@
             </p>
           </details>
 
-          <details>
+          <details open>
             <summary>機能や人数の制限はありますか？</summary>
             <p>
-              β版のため一部は未実装・調整中です。ただし、<strong>編集 → レビュー → マージ</strong>などコア体験は制限なく利用できます。
+              β版のため、一部の機能は未実装・調整中です。
+              ただし、編集 → レビュー → マージといったコアとなる体験は制限なく使えます。
               想定規模は小〜中規模チームです。
             </p>
           </details>
 
-          <details>
+          <details open>
             <summary>フィードバックは必須ですか？</summary>
             <p>
               必須ではありません。使ってみて感じたこと（良い点も不満も）を教えていただけると助かります。
             </p>
           </details>
 
-          <details>
+          <details open>
             <summary>途中で使えなくなったりしませんか？</summary>
             <p>
               実運用を前提に開発しています。突然停止したりデータを失うことはありません（β版のため仕様変更が入る可能性はあります）。
