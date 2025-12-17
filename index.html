@@ -273,7 +273,7 @@
         display: grid;
         grid-template-columns: 0.95fr 1.05fr;
         gap: 24px;
-        align-items: start;
+        align-items: stretch;
       }
       .card {
         border-radius: var(--radius2);
@@ -595,7 +595,7 @@
 
         <div class="bullets">
           <div class="bullet">新メンバーが入るたび、同じ説明を繰り返している</div>
-          <div class="bullet">仕様変更の経緯がSlackに流れて消える</div>
+          <div class="bullet">仕様変更の経緯がチャットに流れて消える</div>
           <div class="bullet">「これ誰が決めた？」が後から分からない</div>
           <div class="bullet">ドキュメントはあるが、どれが正か保証できない</div>
         </div>
@@ -629,35 +629,14 @@
             </div>
           </div>
 
-          <div class="card">
-            <div class="card-pad">
-              <div class="mock">
-                <!-- TODO: replace with your second screenshot or a different crop -->
-                <img src="assets/ui-2.jpg" alt="Lexisの差分・レビューが見えるUIスクリーンショット" />
-              </div>
-              <div class="hint" style="margin-top: 10px">
-                ※画面は開発中のものです。実際の体験を優先して表示しています。
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div style="margin-top: 18px" class="split">
-          <div class="card">
-            <div class="card-pad">
+          <div class="card" data-cursor-element-id="cursor-el-69">
+            <div class="card-pad" data-cursor-element-id="cursor-el-70">
               <h3 class="h3">Gitの作法を、ドキュメントへ。</h3>
               <ul class="list">
                 <li><span class="check">✓</span><span>変更は提案として残る</span></li>
                 <li><span class="check">✓</span><span>レビュー・承認で合意が形成される</span></li>
                 <li><span class="check">✓</span><span>差分と履歴が積み上がる</span></li>
               </ul>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-pad">
-              <h3 class="h3" data-cursor-element-id="cursor-el-93">非エンジニアでも使えます。</h3>
-              <p class="p">Lexisはブランチやpull requestという概念を知らなくても使用できます。必要なのは「編集する / レビューする / 承認する」だけです。</p>
             </div>
           </div>
         </div>
@@ -685,23 +664,13 @@
                 <li><span class="check">✓</span><span>新しいメンバーが、自分で理解できる</span></li>
               </ul>
 
-              <div class="hint" style="margin-top: 12px">
-                新しいメンバーに「これ読んでおいて」と言える状態をつくります。
-              </div>
             </div>
           </div>
 
           <div class="card">
             <div class="card-pad">
-              <h3 class="h3">Gitを知っている人から、始められます。</h3>
-              <p class="p">
-                Lexisは、チーム全員にGitを理解させるツールではありません。<br />
-                最初は「あとから説明が発生しやすいドキュメント」だけで構いません。
-              </p>
-              <div class="flow" style="margin-top: 12px">
-                1. 使い始める <span class="arrow">→</span> 2. レビュー運用 <span class="arrow">→</span> 3. 広げる
-              </div>
-              <div class="hint">学習コストは、チーム全体に広げません。</div>
+              <h3 class="h3" data-cursor-element-id="cursor-el-114">非エンジニアでも使えます。</h3>
+              <p class="p">Lexisはブランチやpull requestという概念を知らなくても使用できます。必要なのは「編集する / レビューする / 承認する」だけです。</p>
             </div>
           </div>
         </div>
