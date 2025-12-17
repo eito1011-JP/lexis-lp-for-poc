@@ -174,7 +174,6 @@
       .hero-sub strong {
         color: var(--text);
         font-weight: 700;
-        margin-right: 0.4em;
       }
       .hero-cta {
         margin-top: 22px;
@@ -275,23 +274,15 @@
         grid-template-columns: 0.95fr 1.05fr;
         gap: 24px;
         align-items: start;
-        margin-top: 0;
-        margin-bottom: 0;
       }
       .card {
         border-radius: var(--radius2);
         border: 1px solid var(--line);
         background: rgba(255, 255, 255, 0.03);
         box-shadow: var(--shadow);
-        height: 100%;
-        display: flex;
-        flex-direction: column;
       }
       .card-pad {
         padding: 18px;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
       }
       .h3 {
         margin: 0;
@@ -350,9 +341,7 @@
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 18px;
-        align-items: stretch;
-        margin-top: 18px;
-        margin-bottom: 0;
+        align-items: start;
       }
       .list {
         margin: 12px 0 0;
@@ -583,7 +572,8 @@
           </div>
           <div class="visual-body">
             <div class="mock">
-              <img src="assets/pr-review.jpg" alt="Lexisの変更提案（差分・レビュー）画面のスクリーンショット" />
+              <!-- TODO: replace with your real screenshot path -->
+              <img src="assets/ui-1.jpg" alt="Lexisの変更提案（差分・レビュー）画面のスクリーンショット" />
             </div>
           </div>
           <div class="visual-note">これはドキュメントの変更提案です</div>
@@ -627,7 +617,11 @@
         <div class="one-scroll">
           <div class="card">
             <div class="card-pad">
-              <h3 class="h3">変更は、すぐには反映されない。</h3>
+              <h3 class="h3">
+                変更は、<br />
+                すぐには<br />
+                反映されない。
+              </h3>
               <p class="p">
                 変更内容は記録され、<br />
                 レビューとマージを経て初めて有効になります。
@@ -654,7 +648,7 @@
           </div>
         </div>
 
-        <div class="split">
+        <div style="margin-top: 18px" class="split">
           <div class="card">
             <div class="card-pad">
               <h3 class="h3">Gitの作法を、ドキュメントへ。</h3>
@@ -685,7 +679,7 @@
     <section id="onboarding">
       <div class="container">
         <div class="section-head">
-          <h2 class="h2">説明しなくていい<br />組織。</h2>
+          <h2 class="h2">説明しなくていい組織。</h2>
           <p class="lead">
             オンボーディングが大変になる理由は、情報が足りないからではありません。<br />
             「なぜそうなったのか」が残っていないからです。
@@ -731,7 +725,6 @@
       <div class="container">
         <div class="section-head">
           <h2 class="h2">β版について。</h2>
-          <p class="lead">最後に残る不安を、ここで先に潰します。</p>
         </div>
 
         <div class="faq">
@@ -753,7 +746,7 @@
           <details>
             <summary>フィードバックは必須ですか？</summary>
             <p>
-              必須ではありません。
+              必須ではありません。使ってみて感じたこと（良い点も不満も）を教えていただけると助かります。
             </p>
           </details>
 
@@ -765,9 +758,6 @@
           </details>
         </div>
 
-        <div class="hint" style="margin-top: 14px">
-          <span class="accent">気軽に試して、合わなければやめられます。</span> 導入を決める必要はありません。
-        </div>
       </div>
     </section>
 
@@ -777,14 +767,11 @@
         <div class="cta-box">
           <div class="section-head" style="margin-bottom: 0">
             <h2 class="h2">まずは、β版から。</h2>
-            <p class="lead">
-              Lexisが自分たちに合うかどうかは、実際に使ってみないと分かりません。
-            </p>
+            <div class="cta-note">無料・クレジットカード不要 / いつでも利用をやめられます</div>
           </div>
 
           <div class="cta-row">
             <a class="btn btn-primary" href="#form">β版に登録する</a>
-            <div class="cta-note">無料・クレジットカード不要 / いつでも利用をやめられます</div>
           </div>
 
           <!-- Simple signup form (replace action with your endpoint / form service) -->
@@ -814,7 +801,6 @@
             </div>
           </form>
 
-          <div class="cta-note">導入を決める必要はありません。</div>
         </div>
       </div>
     </section>
