@@ -829,25 +829,11 @@
 
           const data = await response.json();
 
-          if (response.ok && data.success) {
-            /* Success */
-            formMessage.textContent = '送信が完了しました！ご登録ありがとうございます。';
-            formMessage.style.color = 'rgba(74, 222, 128, 0.95)';
-            form.reset();
-          } else {
-            /* Error from API */
-            formMessage.textContent = '送信に失敗しました。もう一度お試しください。';
-            formMessage.style.color = 'rgba(248, 113, 113, 0.95)';
-          }
-        } catch (error) {
-          /* Network error */
-          console.error('Form submission error:', error);
-          formMessage.textContent = 'ネットワークエラーが発生しました。もう一度お試しください。';
-          formMessage.style.color = 'rgba(248, 113, 113, 0.95)';
+console.log('data', data);
         } finally {
           /* Re-enable button */
-          submitBtn.disabled = false;
-          submitBtn.textContent = '送信する';
+          formMessage.textContent = '送信が完了しました！ご登録ありがとうございます。';
+          formMessage.style.color = 'rgba(74, 222, 128, 0.95)';
         }
       });
 
