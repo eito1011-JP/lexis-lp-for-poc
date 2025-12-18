@@ -120,12 +120,25 @@
         border-color: rgba(233, 238, 245, 0.22);
       }
       .btn-primary {
-        background: linear-gradient(180deg, rgba(74, 222, 128, 0.22), rgba(74, 222, 128, 0.12));
-        border-color: rgba(74, 222, 128, 0.32);
+        position: relative;
+        background: linear-gradient(180deg, rgba(46, 166, 80, 1) 0%, rgba(46, 166, 80, 0.95) 100%);
+        border-color: rgba(37, 133, 64, 1);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.15);
+        color: #ffffff;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+        font-size: 15px;
+        font-weight: 700;
       }
       .btn-primary:hover {
-        background: linear-gradient(180deg, rgba(74, 222, 128, 0.28), rgba(74, 222, 128, 0.16));
-        border-color: rgba(74, 222, 128, 0.44);
+        background: linear-gradient(180deg, rgba(56, 176, 90, 1) 0%, rgba(46, 166, 80, 1) 100%);
+        border-color: rgba(37, 133, 64, 1);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.3), 0 4px 12px rgba(0, 0, 0, 0.2);
+        transform: translateY(-2px);
+        color: #ffffff;
+      }
+      .btn-primary:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2), 0 2px 6px rgba(0, 0, 0, 0.15);
       }
 
       /* Hero */
@@ -548,6 +561,32 @@
         z-index: -1;
         pointer-events: none;
       }
+
+      /* Toast notification */
+      .toast {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%) translateY(-100px);
+        z-index: 1000;
+        padding: 16px 24px;
+        border-radius: 14px;
+        border: 1px solid rgba(74, 222, 128, 0.32);
+        background: linear-gradient(180deg, rgba(74, 222, 128, 0.22), rgba(74, 222, 128, 0.12));
+        backdrop-filter: blur(10px);
+        color: var(--text);
+        font-size: 14px;
+        font-weight: 650;
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+        transition: opacity 0.3s ease, transform 0.3s ease;
+        pointer-events: none;
+      }
+      .toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+        pointer-events: auto;
+      }
     </style>
   </head>
 
@@ -618,10 +657,6 @@
             <div class="bullet">新メンバーが入るたび、同じ説明を繰り返している</div>
           </div>
         </div>
-
-        <div class="image-container" style="position: relative; width: 100%; max-width: 900px; margin: 0 auto 0; aspect-ratio: 900 / 100; min-height: 220px;">
-        </div>
-
       </div>
     </section>
 
@@ -806,10 +841,31 @@
     <script>
       document.getElementById("y").textContent = new Date().getFullYear();
 
+      /* Toast notification function */
+      function showToast(message) {
+        /* Create toast element */
+        const toast = document.createElement('div');
+        toast.className = 'toast';
+        toast.textContent = message;
+        document.body.appendChild(toast);
+
+        /* Show toast with animation */
+        setTimeout(() => {
+          toast.classList.add('show');
+        }, 10);
+
+        /* Hide and remove toast after 5 seconds */
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => {
+            document.body.removeChild(toast);
+          }, 300);
+        }, 5000);
+      }
+
       /* Form submission handler */
       const form = document.getElementById('form');
       const submitBtn = document.getElementById('submitBtn');
-      const formMessage = document.getElementById('formMessage');
 
       form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -817,8 +873,6 @@
         /* Disable button and show loading state */
         submitBtn.disabled = true;
         submitBtn.textContent = '送信中...';
-        formMessage.textContent = '';
-        formMessage.style.color = '';
 
         try {
           const formData = new FormData(form);
@@ -828,12 +882,14 @@
           });
 
           const data = await response.json();
-
-console.log('data', data);
         } finally {
           /* Re-enable button */
-          formMessage.textContent = '送信が完了しました！ご登録ありがとうございます。';
-          formMessage.style.color = 'rgba(74, 222, 128, 0.95)';
+          submitBtn.disabled = false;
+          submitBtn.textContent = '送信する';
+          /* Reset form */
+          form.reset();
+          /* Show success toast */
+          showToast('送信が完了しました！');
         }
       });
 
