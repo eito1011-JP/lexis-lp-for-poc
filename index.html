@@ -707,8 +707,13 @@
         html {
           scroll-snap-type: none;
         }
-        section, .hero, .cta {
+        section, .cta {
           min-height: auto;
+          scroll-snap-align: none;
+          scroll-snap-stop: auto;
+        }
+        .hero {
+          min-height: 100vh;
           scroll-snap-align: none;
           scroll-snap-stop: auto;
         }
