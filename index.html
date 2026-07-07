@@ -11,6 +11,24 @@
     <meta property="og:description" content="社内に散らばった知識を一つにまとめ、AI が組織の文脈を踏まえて動ける状態にする。" />
     <meta property="og:image" content="https://lexis-beta.vercel.app/assets/newogp.png" />
     <link rel="stylesheet" href="lp.css" />
+    <style>
+      /* standalone 用のリセット（lp.css は .lp-page 配下しかリセットしないため、
+         body 既定余白が「白い縁」になる。ここで打ち消す） */
+      html, body { margin: 0; padding: 0; }
+      body { background: oklch(0.985 0 0); overflow-x: hidden; }
+
+      /* waiting list フォーム（末尾の濃色 CTA カード内。stg デザインのトークンに合わせる） */
+      .lp-page .wl-form { max-width: 520px; margin: 32px auto 0; display: flex; flex-direction: column; gap: 12px; text-align: left; }
+      .lp-page .wl-row { display: flex; gap: 12px; }
+      .lp-page .wl-row > * { flex: 1; min-width: 0; }
+      .lp-page .wl-form input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.25); background: #fff; color: var(--foreground); font: inherit; font-size: 15px; outline: none; }
+      .lp-page .wl-form input::placeholder { color: oklch(0.55 0 0); }
+      .lp-page .wl-form input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.35); }
+      .lp-page .wl-form .btn-on { width: 100%; justify-content: center; margin-top: 4px; border: none; cursor: pointer; }
+      .lp-page .wl-form .btn-on:disabled { opacity: 0.75; cursor: default; }
+      .lp-page .wl-note { margin: 4px 2px 0; font-size: 13px; color: rgba(255,255,255,0.82); text-align: center; }
+      @media (max-width: 560px) { .lp-page .wl-row { flex-direction: column; } }
+    </style>
   </head>
   <body>
     <div class="lp-page">
@@ -146,6 +164,18 @@
     <div class="cta-card">
       <h2>個人の記憶から、組織の資産へ。</h2>
       <p>AI と人が同じ文脈で、知識を育て続ける。<br>その土台を、今日から。</p>
+      <form id="wl-form" class="wl-form" action="https://api.staticforms.xyz/submit" method="post">
+        <input type="hidden" name="accessKey" value="sf_6nec2n44k0214nmeg93g1fl7" />
+        <input type="hidden" name="subject" value="Lexis 事前登録（ウェイティングリスト）" />
+        <input type="hidden" name="replyTo" value="@" />
+        <div class="wl-row">
+          <input type="text" name="name" placeholder="お名前" autocomplete="name" required />
+          <input type="email" name="email" placeholder="メールアドレス" autocomplete="email" required />
+        </div>
+        <input type="text" name="company" placeholder="会社名・チーム名（任意）" autocomplete="organization" />
+        <button class="btn btn-on btn-lg" type="submit" id="wlSubmit">事前登録する</button>
+        <p class="wl-note">今月リリース予定です。登録いただいた方から順にご案内します。</p>
+      </form>
     </div>
   </div>
 </section>
@@ -204,6 +234,29 @@
             t.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
+
+        // waiting list フォーム送信
+        var wlForm = document.getElementById('wl-form');
+        var wlSubmit = document.getElementById('wlSubmit');
+        if (wlForm && wlSubmit) {
+          wlForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            wlSubmit.disabled = true;
+            var orig = wlSubmit.textContent;
+            wlSubmit.textContent = '送信中...';
+            fetch('https://api.staticforms.xyz/submit', { method: 'POST', body: new FormData(wlForm) })
+              .then(function () {
+                wlForm.reset();
+                wlSubmit.textContent = '登録しました ✓';
+                setTimeout(function () { wlSubmit.textContent = orig; wlSubmit.disabled = false; }, 4000);
+              })
+              .catch(function () {
+                wlSubmit.textContent = orig;
+                wlSubmit.disabled = false;
+                alert('送信に失敗しました。時間をおいて再度お試しください。');
+              });
+          });
+        }
       })();
     </script>
   </body>
