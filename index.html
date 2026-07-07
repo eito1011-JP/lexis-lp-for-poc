@@ -3,12 +3,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Lexis — 組織の知識を、Git の流儀で</title>
-    <meta name="description" content="GitHub と双方向に同期する、レビューと履歴つきのナレッジ管理。エンジニアだけの道具じゃない、組織のためのナレッジ基盤です。" />
+    <title>Lexis — ドキュメント管理に、Git を</title>
+    <meta name="description" content="ドキュメント管理に、Git を。エンジニアでなくても、変更はレビューを通り、履歴に残る。GitHub と双方向に同期するナレッジ基盤です。" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Lexis — 組織の知識を、Git の流儀で" />
-    <meta property="og:title" content="Lexis — 組織の知識を、Git の流儀で" />
-    <meta property="og:description" content="GitHub と双方向に同期する、レビューと履歴つきのナレッジ管理。エンジニアだけの道具じゃない。" />
+    <meta name="twitter:title" content="Lexis — ドキュメント管理に、Git を" />
+    <meta property="og:title" content="Lexis — ドキュメント管理に、Git を" />
+    <meta property="og:description" content="ドキュメント管理に、Git を。エンジニアでなくても、変更はレビューを通り、履歴に残る。" />
     <meta property="og:image" content="https://lexis-beta.vercel.app/assets/newogp.png" />
     <link rel="stylesheet" href="lp.css" />
     <style>
@@ -16,6 +16,12 @@
          body 既定余白が「白い縁」になる。ここで打ち消す） */
       html, body { margin: 0; padding: 0; }
       body { background: oklch(0.985 0 0); overflow-x: hidden; }
+
+      /* 改行制御: 手打ちの <br> をやめ、文節を .nb（途中で折れないカタマリ）にして
+         幅に応じて文節の境目だけで折り返す。行数のバランスも自動で取る。 */
+      .lp-page .hero-title, .lp-page .show-title, .lp-page .demo-title, .lp-page .contact-title { text-wrap: balance; }
+      .lp-page .hero-sub { text-wrap: pretty; }
+      .lp-page .nb { white-space: nowrap; }
 
       /* お問い合わせフォーム（左=コピー / 右=ラベル付きフォームカードの2カラム） */
       .lp-page .contact { padding: 96px 0; background: var(--secondary); }
@@ -84,9 +90,9 @@
 <header class="hero" id="top">
   <div class="wrap hero-in">
     <div class="hero-text">
-      <span class="pill">エンジニアだけの道具じゃない</span>
-      <h1 class="hero-title">組織の知識を、<br>Git の流儀で。</h1>
-      <p class="hero-sub">GitHub と双方向に同期する、レビューと履歴つきのナレッジ管理。</p>
+      <span class="pill">GitHub 連携ナレッジ管理</span>
+      <h1 class="hero-title"><span class="nb">ドキュメント管理に、</span><span class="nb">Git を。</span></h1>
+      <p class="hero-sub"><span class="nb">エンジニアでなくても、</span><span class="nb">変更はレビューを通り、</span><span class="nb">履歴に残る。</span></p>
     </div>
 
   </div>
@@ -125,7 +131,7 @@
 <!-- ===== WORKFLOW + SUBMIT ===== -->
 <section class="band"><div class="wrap section show flow-feature" id="flow">
   <div class="show-text">
-    <h2 class="show-title">すべての変更に、<br>レビューを。</h2>
+    <h2 class="show-title"><span class="nb">すべての変更に、</span><span class="nb">レビューを。</span></h2>
     <p class="show-lead">誰が書き換えても、担当者のレビューを通ってから反映。変更の履歴と理由が、そのまま組織に残ります。</p>
     <ol class="wsteps">
       <li><span class="wn">01</span><div class="wb"><b>編集</b><span>直したい箇所を、その場で書き換える。</span></div></li>
@@ -145,7 +151,7 @@
   <div class="wrap section show flow-feature">
     <div class="show-text">
       <div class="ey">意思決定グラフ</div>
-      <h2 class="show-title">すべての決定を、<br>理由までさかのぼる。</h2>
+      <h2 class="show-title"><span class="nb">すべての決定を、</span><span class="nb">理由までさかのぼる。</span></h2>
       <p class="show-lead">「なぜこう決めたのか」を、提案や議論の履歴まで一本の線でたどれます。AI も同じ文脈を読むから、古い情報や昔の決定の理由を見失いません。</p>
     </div>
     <div class="show-vis">
@@ -160,7 +166,7 @@
 <section class="band"><div class="wrap section show" id="ai">
   <div class="show-text">
     <div class="ey">AI / MCP 連携</div>
-    <h2 class="show-title">使っている AI を、<br>組織の知識につなぐ。</h2>
+    <h2 class="show-title"><span class="nb">使っている AI を、</span><span class="nb">組織の知識につなぐ。</span></h2>
     <p class="show-lead">お使いの AI から接続するだけ。AI が複数のドキュメントを横断して変更案をまとめ、提案として届きます。反映には、必ず人の承認をはさみます。</p>
   </div>
   <div class="show-vis">
@@ -195,7 +201,7 @@
   <div class="wrap contact-in">
     <div class="contact-copy">
       <div class="ey">お問い合わせ・事前登録</div>
-      <h2 class="contact-title">個人の記憶から、<br />組織の資産へ。</h2>
+      <h2 class="contact-title"><span class="nb">個人の記憶から、</span><span class="nb">組織の資産へ。</span></h2>
       <p class="contact-lead">Lexis を組織でどう使えるか、まずはお気軽にご相談ください。担当者より折り返しご連絡します。</p>
       <ul class="contact-points">
         <li>ドキュメントの作成・レビュー・承認を、一つの流れに</li>
