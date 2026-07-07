@@ -66,6 +66,40 @@
         .lp-page .field-row, .lp-page .checkgroup { grid-template-columns: 1fr; }
         .lp-page .contact-form { padding: 24px; }
       }
+
+      /* 変更の流れ: Linear 型の縦インデックス（番号は索引に格下げ、タイトルが主役、
+         極細 hairline で区切り、アクセントは右の実画面に任せる） */
+      .lp-page #flow { text-align: left; }
+      .lp-page #flow .show-text { max-width: none; margin: 0; }
+      .lp-page #flow .show-lead { margin-top: 16px; max-width: 46ch; }
+      .lp-page #flow .wsteps {
+        list-style: none; margin: 32px 0 0; padding: 0; max-width: none;
+        display: block; counter-reset: step;
+      }
+      .lp-page #flow .wsteps li {
+        display: grid; grid-template-columns: 2.4rem 1fr; align-items: baseline;
+        gap: 4px 18px; padding: 20px 0; border: 0;
+        border-top: 1px solid oklch(0 0 0 / 0.07);
+        text-align: left;
+      }
+      .lp-page #flow .wsteps li:first-child { border-top: 0; padding-top: 4px; }
+      .lp-page #flow .wsteps .wn {
+        counter-increment: step; grid-row: 1 / span 2; align-self: start;
+        font-family: var(--font-mono); font-size: 12px; font-weight: 500;
+        letter-spacing: .04em; color: var(--muted-foreground);
+        font-feature-settings: "tnum"; padding: 0; margin: 0;
+        min-width: 0; padding-top: 4px;
+      }
+      .lp-page #flow .wsteps .wb { display: flex; flex-direction: column; gap: 5px; }
+      .lp-page #flow .wsteps .wb b {
+        font-size: 16px; font-weight: 600; letter-spacing: -.01em; color: var(--foreground);
+      }
+      .lp-page #flow .wsteps .wb span {
+        font-size: 13.5px; line-height: 1.7; color: var(--muted-foreground);
+      }
+      @media (max-width: 900px) {
+        .lp-page #flow .wsteps { max-width: 560px; }
+      }
     </style>
   </head>
   <body>
@@ -120,7 +154,7 @@
 </section>
 
 <!-- ===== WORKFLOW + SUBMIT ===== -->
-<section class="band"><div class="wrap section show flow-feature" id="flow">
+<section class="band"><div class="wrap section show" id="flow">
   <div class="show-text">
     <h2 class="show-title"><span class="nb">変更は、ぜんぶ見える。</span><span class="nb">ぜんぶ残る。</span></h2>
     <p class="show-lead"><span class="nb">編集は「変更提案」にまとまり、</span><span class="nb">誰が・なぜ変えたかまで、</span><span class="nb">すべて履歴に残ります。</span></p>
