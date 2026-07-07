@@ -76,7 +76,6 @@
     <a class="brand" href="#top">Lexis</a>
     <div class="nav-right">
       <div class="nav-links">
-        <a class="nav-link" href="#concept">しくみ</a>
         <a class="nav-link" href="#demo">デモ</a>
         <a class="nav-link" href="#flow">変更の流れ</a>
         <a class="nav-link" href="#graph">意思決定</a>
@@ -97,14 +96,6 @@
 
   </div>
 </header>
-
-<!-- ===== CONCEPT ===== -->
-<section class="band" id="concept">
-  <div class="wrap concept">
-    <p class="q" data-comment-anchor="5a8cfd02b1-p"><span class="nb">「あの人しか知らない」</span><span class="nb">を、なくす。</span></p>
-    <p class="cap" data-comment-anchor="b94a5081a3-p"><span class="nb">知識も、</span><span class="nb">「なぜそうしたか」も、</span><span class="nb">組織そのものに。</span><span class="nb">だれかが抜けても、</span><span class="nb">判断の背景は途切れません。</span></p>
-  </div>
-</section>
 
 <!-- ===== DEMO VIDEO ===== -->
 <section id="demo">
@@ -274,7 +265,7 @@
 <footer>
   <div class="wrap foot-in">
     <a class="brand" href="#top">Lexis</a>
-    <div class="foot-links"><a href="#concept">しくみ</a><a href="#demo">デモ</a><a href="#flow">レビュー</a><a href="#graph">意思決定</a><a href="#ai">AI 連携</a></div>
+    <div class="foot-links"><a href="#demo">デモ</a><a href="#flow">変更の流れ</a><a href="#graph">意思決定</a><a href="#ai">AI 連携</a></div>
     <div class="foot-copy">© 2026 Lexis</div>
   </div>
 </footer>
@@ -289,7 +280,7 @@
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var hasIO = 'IntersectionObserver' in window;
 
-        var targets = document.querySelectorAll('.wrap.concept, .wrap.section, .wrap.demo-in');
+        var targets = document.querySelectorAll('.wrap.section, .wrap.demo-in');
         targets.forEach(function (el) { el.classList.add('reveal'); });
         if (reduce || !hasIO) {
           targets.forEach(function (el) { el.classList.add('in'); });
