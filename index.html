@@ -17,17 +17,49 @@
       html, body { margin: 0; padding: 0; }
       body { background: oklch(0.985 0 0); overflow-x: hidden; }
 
-      /* waiting list フォーム（末尾の濃色 CTA カード内。stg デザインのトークンに合わせる） */
-      .lp-page .wl-form { max-width: 520px; margin: 32px auto 0; display: flex; flex-direction: column; gap: 12px; text-align: left; }
-      .lp-page .wl-row { display: flex; gap: 12px; }
-      .lp-page .wl-row > * { flex: 1; min-width: 0; }
-      .lp-page .wl-form input { width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.25); background: #fff; color: var(--foreground); font: inherit; font-size: 15px; outline: none; }
-      .lp-page .wl-form input::placeholder { color: oklch(0.55 0 0); }
-      .lp-page .wl-form input:focus { box-shadow: 0 0 0 3px rgba(255,255,255,0.35); }
-      .lp-page .wl-form .btn-on { width: 100%; justify-content: center; margin-top: 4px; border: none; cursor: pointer; }
-      .lp-page .wl-form .btn-on:disabled { opacity: 0.75; cursor: default; }
-      .lp-page .wl-note { margin: 4px 2px 0; font-size: 13px; color: rgba(255,255,255,0.82); text-align: center; }
-      @media (max-width: 560px) { .lp-page .wl-row { flex-direction: column; } }
+      /* お問い合わせフォーム（左=コピー / 右=ラベル付きフォームカードの2カラム） */
+      .lp-page .contact { padding: 96px 0; background: var(--secondary); }
+      .lp-page .contact-in { display: grid; grid-template-columns: 5fr 7fr; gap: 56px; align-items: start; }
+      .lp-page .contact-copy { padding-top: 4px; }
+      .lp-page .contact-title { font-family: var(--font-heading); font-size: clamp(1.8rem, 2.6vw, 2.3rem); font-weight: 700; line-height: 1.28; letter-spacing: -0.02em; margin: 12px 0 16px; color: var(--foreground); }
+      .lp-page .contact-lead { font-size: 15px; line-height: 1.8; color: var(--muted-foreground); margin: 0 0 24px; max-width: 42ch; }
+      .lp-page .contact-points { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+      .lp-page .contact-points li { position: relative; padding-left: 26px; font-size: 14.5px; line-height: 1.55; color: var(--foreground); }
+      .lp-page .contact-points li::before { content: "\2713"; position: absolute; left: 0; top: -1px; color: var(--primary); font-weight: 700; }
+
+      .lp-page .contact-form { background: var(--card); border: 1px solid var(--border); border-radius: 20px; padding: 36px; display: flex; flex-direction: column; gap: 18px; box-shadow: 0 1px 2px rgba(15,23,42,0.04), 0 18px 40px -20px rgba(15,23,42,0.16); }
+      .lp-page .form-req { margin: 0; font-size: 12.5px; color: var(--muted-foreground); }
+      .lp-page .req { color: var(--primary); font-weight: 700; }
+      .lp-page .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+      .lp-page .field { display: flex; flex-direction: column; gap: 7px; }
+      .lp-page .field > label, .lp-page .field-label { font-size: 13px; font-weight: 600; color: var(--foreground); letter-spacing: -0.01em; }
+      .lp-page .contact-form input[type="text"],
+      .lp-page .contact-form input[type="email"],
+      .lp-page .contact-form select,
+      .lp-page .contact-form textarea {
+        width: 100%; font: inherit; font-size: 14.5px; color: var(--foreground); background: #fff;
+        border: 1px solid var(--input); border-radius: 10px; padding: 11px 13px; outline: none;
+        transition: border-color 0.14s, box-shadow 0.14s;
+      }
+      .lp-page .contact-form textarea { resize: vertical; min-height: 84px; line-height: 1.6; }
+      .lp-page .contact-form input:focus,
+      .lp-page .contact-form select:focus,
+      .lp-page .contact-form textarea:focus { border-color: var(--ring); box-shadow: 0 0 0 3px oklch(0.5 0.2 277 / 0.14); }
+      .lp-page .contact-form select { appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 38px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; }
+      .lp-page .checkgroup { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 16px; }
+      .lp-page .check { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 400; color: var(--foreground); cursor: pointer; }
+      .lp-page .check input { width: 16px; height: 16px; margin: 0; accent-color: var(--primary); cursor: pointer; }
+      .lp-page .contact-submit { width: 100%; height: 48px; margin-top: 4px; font-size: 15px; }
+      .lp-page .contact-submit:disabled { opacity: 0.7; cursor: default; }
+
+      @media (max-width: 900px) {
+        .lp-page .contact { padding: 64px 0; }
+        .lp-page .contact-in { grid-template-columns: 1fr; gap: 32px; }
+      }
+      @media (max-width: 560px) {
+        .lp-page .field-row, .lp-page .checkgroup { grid-template-columns: 1fr; }
+        .lp-page .contact-form { padding: 24px; }
+      }
     </style>
   </head>
   <body>
@@ -158,25 +190,78 @@
   </div>
 </section>
 
-<!-- ===== CTA ===== -->
-<section class="cta">
-  <div class="wrap">
-    <div class="cta-card">
-      <h2>個人の記憶から、組織の資産へ。</h2>
-      <p>AI と人が同じ文脈で、知識を育て続ける。<br>その土台を、今日から。</p>
-      <form id="wl-form" class="wl-form" action="https://api.staticforms.xyz/submit" method="post">
-        <input type="hidden" name="accessKey" value="sf_6nec2n44k0214nmeg93g1fl7" />
-        <input type="hidden" name="subject" value="Lexis 事前登録（ウェイティングリスト）" />
-        <input type="hidden" name="replyTo" value="@" />
-        <div class="wl-row">
-          <input type="text" name="name" placeholder="お名前" autocomplete="name" required />
-          <input type="email" name="email" placeholder="メールアドレス" autocomplete="email" required />
-        </div>
-        <input type="text" name="company" placeholder="会社名・チーム名（任意）" autocomplete="organization" />
-        <button class="btn btn-on btn-lg" type="submit" id="wlSubmit">事前登録する</button>
-        <p class="wl-note">今月リリース予定です。登録いただいた方から順にご案内します。</p>
-      </form>
+<!-- ===== CONTACT ===== -->
+<section class="contact" id="contact">
+  <div class="wrap contact-in">
+    <div class="contact-copy">
+      <div class="ey">お問い合わせ・事前登録</div>
+      <h2 class="contact-title">個人の記憶から、<br />組織の資産へ。</h2>
+      <p class="contact-lead">Lexis を組織でどう使えるか、まずはお気軽にご相談ください。担当者より折り返しご連絡します。</p>
+      <ul class="contact-points">
+        <li>ドキュメントの作成・レビュー・承認を、一つの流れに</li>
+        <li>「いつ・誰が・なぜ決めたか」まで組織に残す</li>
+        <li>お使いの AI（MCP）や GitHub とそのまま連携</li>
+      </ul>
     </div>
+
+    <form id="contact-form" class="contact-form" action="https://api.staticforms.xyz/submit" method="post">
+      <input type="hidden" name="accessKey" value="sf_6nec2n44k0214nmeg93g1fl7" />
+      <input type="hidden" name="subject" value="Lexis お問い合わせ・事前登録" />
+      <input type="hidden" name="replyTo" value="@" />
+
+      <p class="form-req"><span class="req">*</span> は必須項目です</p>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="c-name">お名前 <span class="req">*</span></label>
+          <input id="c-name" type="text" name="name" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="c-email">会社用メールアドレス <span class="req">*</span></label>
+          <input id="c-email" type="email" name="email" autocomplete="email" required />
+        </div>
+      </div>
+
+      <div class="field-row">
+        <div class="field">
+          <label for="c-company">会社名・チーム名 <span class="req">*</span></label>
+          <input id="c-company" type="text" name="company" autocomplete="organization" required />
+        </div>
+        <div class="field">
+          <label for="c-title">役職・職種</label>
+          <input id="c-title" type="text" name="jobTitle" autocomplete="organization-title" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="c-size">チームの人数 <span class="req">*</span></label>
+        <select id="c-size" name="teamSize" required>
+          <option value="" disabled selected>選択してください</option>
+          <option>1〜9人</option>
+          <option>10〜49人</option>
+          <option>50〜199人</option>
+          <option>200〜499人</option>
+          <option>500人以上</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <span class="field-label">興味がある機能</span>
+        <div class="checkgroup">
+          <label class="check"><input type="checkbox" name="interest" value="ドキュメント管理" /><span>ドキュメント管理</span></label>
+          <label class="check"><input type="checkbox" name="interest" value="承認フロー付きの編集" /><span>承認フロー付きの編集</span></label>
+          <label class="check"><input type="checkbox" name="interest" value="AI（MCP）連携" /><span>AI（MCP）連携</span></label>
+          <label class="check"><input type="checkbox" name="interest" value="GitHub 双方向同期" /><span>GitHub 双方向同期</span></label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="c-msg">メッセージ</label>
+        <textarea id="c-msg" name="message" rows="3" placeholder="例）開発ルールの運用から試したいです。"></textarea>
+      </div>
+
+      <button class="btn btn-primary contact-submit" type="submit" id="contactSubmit">問い合わせる</button>
+    </form>
   </div>
 </section>
 
@@ -198,7 +283,7 @@
         var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
         var hasIO = 'IntersectionObserver' in window;
 
-        var targets = document.querySelectorAll('.wrap.concept, .wrap.section, .wrap.demo-in, .cta-card');
+        var targets = document.querySelectorAll('.wrap.concept, .wrap.section, .wrap.demo-in');
         targets.forEach(function (el) { el.classList.add('reveal'); });
         if (reduce || !hasIO) {
           targets.forEach(function (el) { el.classList.add('in'); });
@@ -235,24 +320,24 @@
           });
         });
 
-        // waiting list フォーム送信
-        var wlForm = document.getElementById('wl-form');
-        var wlSubmit = document.getElementById('wlSubmit');
-        if (wlForm && wlSubmit) {
-          wlForm.addEventListener('submit', function (e) {
+        // お問い合わせフォーム送信
+        var cForm = document.getElementById('contact-form');
+        var cSubmit = document.getElementById('contactSubmit');
+        if (cForm && cSubmit) {
+          cForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            wlSubmit.disabled = true;
-            var orig = wlSubmit.textContent;
-            wlSubmit.textContent = '送信中...';
-            fetch('https://api.staticforms.xyz/submit', { method: 'POST', body: new FormData(wlForm) })
+            cSubmit.disabled = true;
+            var orig = cSubmit.textContent;
+            cSubmit.textContent = '送信中...';
+            fetch('https://api.staticforms.xyz/submit', { method: 'POST', body: new FormData(cForm) })
               .then(function () {
-                wlForm.reset();
-                wlSubmit.textContent = '登録しました ✓';
-                setTimeout(function () { wlSubmit.textContent = orig; wlSubmit.disabled = false; }, 4000);
+                cForm.reset();
+                cSubmit.textContent = '送信しました ✓';
+                setTimeout(function () { cSubmit.textContent = orig; cSubmit.disabled = false; }, 4000);
               })
               .catch(function () {
-                wlSubmit.textContent = orig;
-                wlSubmit.disabled = false;
+                cSubmit.textContent = orig;
+                cSubmit.disabled = false;
                 alert('送信に失敗しました。時間をおいて再度お試しください。');
               });
           });
