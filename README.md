@@ -1,4 +1,4 @@
-# Lexis - ランディングページ
+# Traceity - ランディングページ
 
 ドキュメントに、Pull Requestという作法を。
 
@@ -27,7 +27,7 @@ docker-compose down
 
 ```bash
 # コンテナを起動
-docker run -d --name lexis-lp-web -p 8081:80 -v "$(pwd)":/usr/share/nginx/html:ro nginx:alpine
+docker run -d --name traceity-lp-web -p 8081:80 -v "$(pwd)":/usr/share/nginx/html:ro nginx:alpine
 
 # または docker-compose を使用
 docker-compose up web -d
@@ -36,10 +36,10 @@ docker-compose up web -d
 open http://localhost:8081
 
 # コンテナを停止
-docker stop lexis-lp-web
+docker stop traceity-lp-web
 
 # コンテナを削除
-docker rm lexis-lp-web
+docker rm traceity-lp-web
 ```
 
 ### ローカルで直接起動する場合（Node.js使用）
@@ -70,7 +70,7 @@ php -S localhost:8081
 ## ファイル構成
 
 ```
-lexis-lp/
+traceity-lp/
 ├── index.html           # メインHTMLファイル
 ├── docker-compose.yml   # Docker Compose設定
 ├── assets/              # 画像などのアセット（要作成）
@@ -84,10 +84,9 @@ lexis-lp/
 
 以下の画像ファイルを `assets/` ディレクトリに配置してください：
 
-- `assets/ui-1.jpg` - Lexisの変更提案（差分・レビュー）画面のスクリーンショット
-- `assets/ui-2.jpg` - Lexisの差分・レビューが見えるUIスクリーンショット
+- `assets/ui-1.jpg` - Traceityの変更提案（差分・レビュー）画面のスクリーンショット
+- `assets/ui-2.jpg` - Traceityの差分・レビューが見えるUIスクリーンショット
 
 ## ライセンス
 
-© 2024 Lexis. All rights reserved.
-
+© 2024 Traceity. All rights reserved.

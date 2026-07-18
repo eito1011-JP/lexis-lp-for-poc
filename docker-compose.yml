@@ -4,7 +4,7 @@ services:
   # 本番用NGINXサーバー
   web:
     image: nginx:alpine
-    container_name: lexis-lp-web
+    container_name: traceity-lp-web
     ports:
       - "8081:80"
     volumes:
@@ -14,7 +14,7 @@ services:
   # 開発用ホットリロードサーバー
   dev:
     image: node:20-alpine
-    container_name: lexis-lp-dev
+    container_name: traceity-lp-dev
     working_dir: /app
     ports:
       - "3000:3000"
@@ -23,4 +23,3 @@ services:
       - ./:/app
     command: sh -c "npm install && npm run dev"
     restart: unless-stopped
-
